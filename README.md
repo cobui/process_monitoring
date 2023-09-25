@@ -17,7 +17,6 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 
 
@@ -174,13 +173,13 @@ More Following!
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/cobui/process_monitoring.svg?style=for-the-badge
+[contributors-url]: https://github.com/cobui/process_monitoring/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/cobui/process_monitoring.svg?style=for-the-badge
+[forks-url]: https://github.com/cobui/process_monitoring/network/members
+[stars-shield]: https://img.shields.io/github/stars/cobui/process_monitoring.svg?style=for-the-badge
+[stars-url]: https://github.com/cobui/process_monitoring/stargazers
+[issues-shield]: https://img.shields.io/github/issues/cobui/process_monitoring.svg?style=for-the-badge
+[issues-url]: https://github.com/cobui/process_monitoring/issues
+[license-shield]: https://img.shields.io/github/license/cobui/process_monitoring.svg?style=for-the-badge
+[license-url]: https://github.com/cobui/process_monitoring/blob/master/LICENSE.txt
