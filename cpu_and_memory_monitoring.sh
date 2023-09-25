@@ -11,14 +11,18 @@ PRG="$0"
 PRGDIR="$(dirname $PRG)"
 FILENAME="cpu_$(date +%F_%H%M%S).csv"
 DIRPATH=$(cd "$PRGDIR" || exit; pwd)
-DURATION=""
 DEFAULT_DURATION="120"
 CPU_FIELD=0
 MEM_FIELD=0
 COUNTER=0
+NUM_LINES_WRITTEN_STDOUT=0
 
 is_numeric() {
 	[[ "$1" =~ ^[0-9]+$ ]]
+}
+
+is_boolean() {
+	[[ "$1" =~ ^(true|false)$ ]] 
 }
 
 find_cpu_and_mem_field() {
@@ -47,20 +51,61 @@ find_cpu_and_mem_field() {
 	done
 }
 
-# Check if duration is set
-if [ $# -eq 1 ]; then
+set_arguments() {
+	while [ "$#" -gt 0 ]; do
+		case "$1" in
+			-d|-duration)
+				check_and_set_duration $2
+				shift 2
+				;;
+			-v|-verbose)
+				check_and_set_verbose $2
+				shift 2
+				;;
+			*)
+				echo "Unknown argument: $1"
+				exit 1
+				;;
+		esac
+	done
+
+	if [ -z "$DURATION" ];then
+		$DURATION=$DEFAULT_DURATION
+		echo "Setting duration to default 120s"
+	fi
+
+	if [ -z "$VERBOSE" ]; then
+		VERBOSE=false
+	fi
+
+	if $VERBOSE; then
+		echo "Logging option is set to verbose and will continue logging data entries"
+	else
+		echo "Logging option is set to non-verbose. After logging the first 5 lines it will continue writing to the .csv file silently"
+	fi
+}
+
+check_and_set_duration() {     
 	if is_numeric "$1"; then
 		echo "Setting duration to $1s"
-		DURATION="$1"
+        	DURATION="$1"
 	else
-		echo "Error: Duration argument must be a number."
+                echo "Error: Duration argument must be a number."
+                exit 1
+        fi
+}
+
+check_and_set_verbose() {
+	if is_boolean "$1"; then
+		echo "Setting verbose to $1"
+		VERBOSE="$2"
+	else 
+		echo "Error: Verbose argument must be boolean"
 		exit 1
 	fi
-else
-	echo "Using default duration of 120s"
-	DURATION="$DEFAULT_DURATION"
-fi
+}
 
+set_arguments "$@"
 find_cpu_and_mem_field
 
 # Create directory and file
@@ -71,14 +116,25 @@ DIRPATH="$DIRPATH/data"
 FILE="$DIRPATH/$FILENAME"
 touch $FILE
 
-echo "writing to file: $FILE"
+echo "Writing to file: $FILE"
 
 # Take measurements of cpu and memory
 while [ $((COUNTER)) -lt $((DURATION)) ]; do
 	DATE=`date +"%H:%M:%S:%s%:z"`
 	CPU_USAGE=$(top -b -n 1 | grep -w node | tr -s ' ' | cut -d ' ' -f $CPU_FIELD | paste -sd ',' | sed 's/^/cpu=/; s/,/,cpu=/g')
 	MEMORY_USAGE=$(top -b -n 1 | grep -w node | tr -s ' ' | cut -d ' ' -f $MEM_FIELD | paste -sd ',' | sed 's/^/mem=/; s/,/,mem=/g') 
-	echo "$DATE,$CPU_USAGE,$MEMORY_USAGE" | tee -a $FILE
+	 
+        # should we print also to stdout?
+        NUM_LINES_WRITTEN_STDOUT=$[$NUM_LINES_WRITTEN_STDOUT +1]
+	if [[ $NUM_LINES_WRITTEN_STDOUT -lt 6 || $VERBOSE = true ]]; then
+		echo "Appending line $NUM_LINES_WRITTEN_STDOUT: $(echo "$DATE,$CPU_USAGE,$MEMORY_USAGE" | tee -a $FILE)"
+        elif [[ $NUM_LINES_WRITTEN_STDOUT -eq 5 && $VERBOSE = false ]]; then
+                echo "[verbose mode is off, logging continues on the output file, not on stdout]"
+                echo "$DATE,$CPU_USAGE,$MEMORY_USAGE" >> $FILE
+        fi
+	
 	COUNTER=$((COUNTER +1))
 	sleep 1
 done
+
+echo "Written $NUM_LINES_WRITTEN to the csv file"
