@@ -15,17 +15,18 @@ DURATION=""
 DEFAULT_DURATION="120"
 CPU_FIELD=0
 MEM_FIELD=0
+COUNTER=0
 
 is_numeric() {
-	[[ "$1" =~ ^[0-9]$ ]]
+	[[ "$1" =~ ^[0-9]+$ ]]
 }
 
 find_cpu_and_mem_field() {
 	IFS=" "
 	HEADER_STR=$( top -b -n 1 | grep "CPU" | head -1  )
 	FIRST_CHAR=$(printf %.1s "$HEADER_STR")
-	COUNTER=1
-
+	local COUNTER=1
+	
 	if [ "$FIRST_CHAR" = " " ]; then
     		(( COUNTER++))
 	fi
@@ -48,8 +49,8 @@ find_cpu_and_mem_field() {
 
 # Check if duration is set
 if [ $# -eq 1 ]; then
-	if [is_numeric "$1"]; then
-		echo "Setting duration to $1"
+	if is_numeric "$1"; then
+		echo "Setting duration to $1s"
 		DURATION="$1"
 	else
 		echo "Error: Duration argument must be a number."
@@ -62,7 +63,6 @@ fi
 
 find_cpu_and_mem_field
 
-echo "CPU field is $CPU_FIELD; MEM field is: $MEM_FIELD"
 # Create directory and file
 if [ ! -d "$DIRPATH/data" ]; then
 	mkdir -p "$DIRPATH/data"
