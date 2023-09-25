@@ -117,6 +117,7 @@ Following soon!
 ## Roadmap
 
 - [x] Provide initial script with duration functionality
+- [X] Add verbose flag to control logging
 - [ ] Add an exit command
 - [ ] Hide output after a couple of lines
 - [ ] Provide visualisation using Python with various options
